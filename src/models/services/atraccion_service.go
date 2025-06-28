@@ -17,7 +17,6 @@ func SaveAtracciones(input []entities.Atraccion) ([]entities.Atraccion, error) {
 		} else {
 			guardadas = append(guardadas, item)
 
-			// Notificar al WebSocket con el ID
 			go func(id uint) {
 				if atraccion, err := GetAtraccionByID(id); err == nil {
 					websocket.NotifyClients(map[string]interface{}{
@@ -25,7 +24,6 @@ func SaveAtracciones(input []entities.Atraccion) ([]entities.Atraccion, error) {
 						"data": atraccion,
 					})
 
-					// Marcar como enviado si fue notificado
 					db.DB.Model(&entities.Atraccion{}).Where("id = ?", id).Update("enviado", true)
 				}
 			}(uint(item.Id))
@@ -41,7 +39,6 @@ func SaveAtracciones(input []entities.Atraccion) ([]entities.Atraccion, error) {
 }
 
 
-// ✅ Nuevo método GetAtraccionByID
 func GetAtraccionByID(id uint) (*entities.Atraccion, error) {
 	var atr entities.Atraccion
 	if err := db.DB.First(&atr, id).Error; err != nil {

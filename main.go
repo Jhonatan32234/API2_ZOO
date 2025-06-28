@@ -7,8 +7,10 @@ import (
 	"api2/src/routes"
 	"api2/websocket"
 	"log"
-
+	_ "api2/docs"
 	"github.com/gin-gonic/gin"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	swaggerFiles "github.com/swaggo/files"
 )
 
 func main() {
@@ -18,11 +20,10 @@ func main() {
 	go websocket.StartBroadcaster()
 
 	r := gin.Default()
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	// ✅ Agrega aquí tu ruta WebSocket
 	r.GET("/ws", controllers.WebSocketHandler)
 
-	// ✅ Agrega las demás rutas
 	routes.SetupRoutes(r)
 
 	log.Println("Servidor iniciado en :8081")

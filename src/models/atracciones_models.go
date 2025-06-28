@@ -12,18 +12,24 @@ func GetNowAtraccion() ([]entities.Atraccion, error) {
 }
 
 func GetLastWeekAtraccion() ([]entities.Atraccion, error) {
-	var atracciones []entities.Atraccion
+	var fechas []string
+
 	err := db.DB.Raw(`
-		SELECT * FROM atraccion 
-		WHERE fecha IN (
-			SELECT DISTINCT fecha 
-			FROM atraccion 
-			ORDER BY fecha DESC 
-			LIMIT 6
-		)
-	`).Scan(&atracciones).Error
+		SELECT DISTINCT fecha 
+		FROM atraccion 
+		ORDER BY fecha DESC 
+		LIMIT 6
+	`).Scan(&fechas).Error
+	if err != nil || len(fechas) == 0 {
+		return nil, err
+	}
+
+	var atracciones []entities.Atraccion
+
+	err = db.DB.Where("fecha IN ?", fechas).Find(&atracciones).Error
 	return atracciones, err
 }
+
 
 func GetYesterdayAtraccion() ([]entities.Atraccion, error) {
 	var atracciones []entities.Atraccion

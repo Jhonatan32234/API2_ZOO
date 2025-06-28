@@ -13,25 +13,30 @@ func GetNowVisitas() ([]entities.Visitas, error) {
 }
 
 func GetLastWeekVisitas() ([]entities.Visitas, error) {
-	var visitas []entities.Visitas
+	var fechas []string
+
 	err := db.DB.Raw(`
-		SELECT * FROM visitas 
-		WHERE fecha IN (
-			SELECT DISTINCT fecha 
-			FROM visitas 
-			ORDER BY fecha DESC 
-			LIMIT 6
-		)
-	`).Scan(&visitas).Error
+		SELECT DISTINCT fecha 
+		FROM visitas 
+		ORDER BY fecha DESC 
+		LIMIT 6
+	`).Scan(&fechas).Error
+	if err != nil || len(fechas) == 0 {
+		return nil, err
+	}
+
+	var visitas []entities.Visitas
+
+	err = db.DB.Where("fecha IN ?", fechas).Find(&visitas).Error
 	return visitas, err
 }
+
 
 
 func GetYesterdayVisitas() ([]entities.Visitas, error) {
 	var visitas []entities.Visitas
 	var fecha string
 
-	// Obtener la segunda fecha más reciente
 	err := db.DB.Raw(`
 		SELECT DISTINCT fecha 
 		FROM visitas 
@@ -54,7 +59,6 @@ type OjivaResultVisitas struct {
 func GetOjivaVisitas(fecha string) ([]OjivaResultVisitas, error) {
 	var result []OjivaResultVisitas
 
-	// Si no se pasa una fecha, obtener la fecha más reciente
 	if fecha == "" {
 		err := db.DB.Raw(`
 			SELECT MAX(fecha) 

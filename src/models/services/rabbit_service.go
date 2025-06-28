@@ -40,15 +40,6 @@ func consumeVisitas(ch *amqp.Channel) {
 			}
 
 			log.Printf("✅ Visitas guardadas: %d", len(guardadas))
-			// Notificar solo las guardadas
-			/*for _, visita := range guardadas {
-				dbVisita, err := GetVisitaByID(uint(visita.Id))
-				if err == nil {
-					websocket.NotifyClients(struct {
-						Datos *models.Visitas `json:"datos"`
-					}{dbVisita})
-				}
-			}*/
 
 			ch.Ack(d.DeliveryTag, false)
 		}
@@ -75,15 +66,6 @@ func consumeAtracciones(ch *amqp.Channel) {
 				continue
 			}
 			log.Printf("✅ Atracciones guardadas: %d", len(guardadas))
-			/*for _, atr := range guardadas {
-				dbAtr, err := GetAtraccionByID(uint(atr.Id))
-				if err == nil {
-					websocket.NotifyClients(struct {
-						Tipo  string             `json:"tipo"`
-						Datos *models.Atraccion  `json:"datos"`
-					}{"atraccion", dbAtr})
-				}
-			}*/
 
 			ch.Ack(d.DeliveryTag, false)
 		}

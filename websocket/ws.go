@@ -18,14 +18,12 @@ var (
 )
 
 func HandleConnections(c *gin.Context) {
-	token := c.Query("token")
-	log.Printf("New WS connection attempt with token: %s", token)
-
-	claims, err := auth.ValidateJWT(token, "admin", "dev")
+	claims, err := auth.ValidateTokenFromQuery(c, "admin", "dev")
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 		return
 	}
+
 	log.Printf("✅ Usuario autenticado: ID=%d, Rol=%s", claims.UserID, claims.Role)
 
 	upgrader := websocket.Upgrader{
@@ -48,7 +46,7 @@ func HandleConnections(c *gin.Context) {
 	}()
 
 	mutex.Lock()
-	clients[ws] = token
+	clients[ws] = c.Query("token")
 	mutex.Unlock()
 
 	log.Printf("🟢 Conexión WebSocket establecida.")
@@ -70,6 +68,7 @@ func NotifyClients(data any) {
 	}
 	broadcast <- bytes
 }
+
 
 func StartBroadcaster() {
 	for {

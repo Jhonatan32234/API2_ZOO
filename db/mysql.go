@@ -21,6 +21,6 @@ func Connect() {
 		log.Fatal("Database connection failed", err)
 	}
 
-	db.AutoMigrate(&entities.Visitas{}, &entities.Atraccion{})
+	db.AutoMigrate(&entities.Visitas{}, &entities.Atraccion{}, &entities.VisitaGeneral{})
 	DB = db
 }

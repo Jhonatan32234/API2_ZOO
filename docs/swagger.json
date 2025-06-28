@@ -1,0 +1,632 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/api/atraccion/fecha/{fecha}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "atraccion"
+                ],
+                "summary": "Obtener atracciones por fecha exacta",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fecha en formato YYYY-MM-DD",
+                        "name": "fecha",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Atraccion"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/atraccion/lastweek": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "atraccion"
+                ],
+                "summary": "Obtener atracciones de las 6 fechas más recientes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Atraccion"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/atraccion/now": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "atraccion"
+                ],
+                "summary": "Obtener atracciones de la fecha más reciente",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Atraccion"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/atraccion/ojiva": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "atraccion"
+                ],
+                "summary": "Obtener ojiva de atracción (tiempo total por hora)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fecha en formato YYYY-MM-DD",
+                        "name": "fecha",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.OjivaResultAtraccion"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/atraccion/yesterday": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "atraccion"
+                ],
+                "summary": "Obtener atracciones de la penúltima fecha registrada",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Atraccion"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/visitas/fecha/{fecha}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitas"
+                ],
+                "summary": "Obtener visitas por fecha exacta",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fecha en formato YYYY-MM-DD",
+                        "name": "fecha",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Visitas"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/visitas/lastweek": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitas"
+                ],
+                "summary": "Obtener visitas de las 6 fechas más recientes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Visitas"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/visitas/now": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitas"
+                ],
+                "summary": "Obtener visitas de la fecha más reciente",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Visitas"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/visitas/ojiva": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitas"
+                ],
+                "summary": "Obtener ojiva de visitas (suma por hora)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fecha en formato YYYY-MM-DD",
+                        "name": "fecha",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.OjivaResultVisitas"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/visitas/yesterday": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitas"
+                ],
+                "summary": "Obtener visitas de la penúltima fecha registrada",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Visitas"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/visitasGeneral": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitasGeneral"
+                ],
+                "summary": "Obtener todas las visitas registradas",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.VisitaGeneral"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitasGeneral"
+                ],
+                "summary": "Crear una nueva visita",
+                "parameters": [
+                    {
+                        "description": "Datos de la visita",
+                        "name": "visita",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.VisitaGeneral"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/visitasGeneral/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitasGeneral"
+                ],
+                "summary": "Obtener una visita por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la visita",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.VisitaGeneral"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitasGeneral"
+                ],
+                "summary": "Actualizar una visita por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la visita",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Nuevos datos de la visita",
+                        "name": "visita",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.VisitaGeneral"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visitasGeneral"
+                ],
+                "summary": "Eliminar una visita por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la visita",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entities.Atraccion": {
+            "type": "object",
+            "properties": {
+                "enviado": {
+                    "type": "boolean"
+                },
+                "fecha": {
+                    "type": "string"
+                },
+                "hora": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nombre": {
+                    "type": "string"
+                },
+                "tiempo": {
+                    "type": "integer"
+                }
+            }
+        },
+        "entities.VisitaGeneral": {
+            "type": "object",
+            "properties": {
+                "fecha": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "visitas": {
+                    "type": "integer"
+                }
+            }
+        },
+        "entities.Visitas": {
+            "type": "object",
+            "properties": {
+                "enviado": {
+                    "type": "boolean"
+                },
+                "fecha": {
+                    "type": "string"
+                },
+                "hora": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "visitantes": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.OjivaResultAtraccion": {
+            "type": "object",
+            "properties": {
+                "hora": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.OjivaResultVisitas": {
+            "type": "object",
+            "properties": {
+                "hora": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

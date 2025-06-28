@@ -5,6 +5,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"log"
 	"time"
+	"github.com/gin-gonic/gin"
 )
 
 var jwtSecret = []byte("clave_secreta_super_segura")
@@ -16,7 +17,12 @@ type CustomClaims struct {
 }
 
 
-func ValidateJWT(tokenString string, allowedRoles ...string) (*CustomClaims, error) {
+func ValidateTokenFromQuery(c *gin.Context, allowedRoles ...string) (*CustomClaims, error) {
+	tokenString := c.Query("token")
+	if tokenString == "" {
+		return nil, errors.New("token no proporcionado en la query")
+	}
+
 	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("método de firma inválido")

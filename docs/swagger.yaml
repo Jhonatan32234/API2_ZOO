@@ -1,0 +1,408 @@
+definitions:
+  entities.Atraccion:
+    properties:
+      enviado:
+        type: boolean
+      fecha:
+        type: string
+      hora:
+        type: string
+      id:
+        type: integer
+      nombre:
+        type: string
+      tiempo:
+        type: integer
+    type: object
+  entities.VisitaGeneral:
+    properties:
+      fecha:
+        type: string
+      id:
+        type: integer
+      visitas:
+        type: integer
+    type: object
+  entities.Visitas:
+    properties:
+      enviado:
+        type: boolean
+      fecha:
+        type: string
+      hora:
+        type: string
+      id:
+        type: integer
+      visitantes:
+        type: integer
+    type: object
+  models.OjivaResultAtraccion:
+    properties:
+      hora:
+        type: string
+      total:
+        type: integer
+    type: object
+  models.OjivaResultVisitas:
+    properties:
+      hora:
+        type: string
+      total:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /api/atraccion/fecha/{fecha}:
+    get:
+      parameters:
+      - description: Fecha en formato YYYY-MM-DD
+        in: path
+        name: fecha
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Atraccion'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener atracciones por fecha exacta
+      tags:
+      - atraccion
+  /api/atraccion/lastweek:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Atraccion'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener atracciones de las 6 fechas más recientes
+      tags:
+      - atraccion
+  /api/atraccion/now:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Atraccion'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener atracciones de la fecha más reciente
+      tags:
+      - atraccion
+  /api/atraccion/ojiva:
+    get:
+      parameters:
+      - description: Fecha en formato YYYY-MM-DD
+        in: query
+        name: fecha
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.OjivaResultAtraccion'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener ojiva de atracción (tiempo total por hora)
+      tags:
+      - atraccion
+  /api/atraccion/yesterday:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Atraccion'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener atracciones de la penúltima fecha registrada
+      tags:
+      - atraccion
+  /api/visitas/fecha/{fecha}:
+    get:
+      parameters:
+      - description: Fecha en formato YYYY-MM-DD
+        in: path
+        name: fecha
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Visitas'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener visitas por fecha exacta
+      tags:
+      - visitas
+  /api/visitas/lastweek:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Visitas'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener visitas de las 6 fechas más recientes
+      tags:
+      - visitas
+  /api/visitas/now:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Visitas'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener visitas de la fecha más reciente
+      tags:
+      - visitas
+  /api/visitas/ojiva:
+    get:
+      parameters:
+      - description: Fecha en formato YYYY-MM-DD
+        in: query
+        name: fecha
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.OjivaResultVisitas'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener ojiva de visitas (suma por hora)
+      tags:
+      - visitas
+  /api/visitas/yesterday:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Visitas'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener visitas de la penúltima fecha registrada
+      tags:
+      - visitas
+  /api/visitasGeneral:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.VisitaGeneral'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener todas las visitas registradas
+      tags:
+      - visitasGeneral
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Datos de la visita
+        in: body
+        name: visita
+        required: true
+        schema:
+          $ref: '#/definitions/entities.VisitaGeneral'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Crear una nueva visita
+      tags:
+      - visitasGeneral
+  /api/visitasGeneral/{id}:
+    delete:
+      parameters:
+      - description: ID de la visita
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Eliminar una visita por ID
+      tags:
+      - visitasGeneral
+    get:
+      parameters:
+      - description: ID de la visita
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.VisitaGeneral'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener una visita por ID
+      tags:
+      - visitasGeneral
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID de la visita
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Nuevos datos de la visita
+        in: body
+        name: visita
+        required: true
+        schema:
+          $ref: '#/definitions/entities.VisitaGeneral'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Actualizar una visita por ID
+      tags:
+      - visitasGeneral
+swagger: "2.0"

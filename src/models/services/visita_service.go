@@ -17,7 +17,6 @@ func SaveVisitas(input []entities.Visitas) ([]entities.Visitas, error) {
 		} else {
 			guardadas = append(guardadas, item)
 
-			// Notificar al WebSocket con el ID
 			go func(id uint) {
 				if visita, err := GetVisitaByID(id); err == nil {
 					websocket.NotifyClients(map[string]interface{}{
@@ -25,7 +24,6 @@ func SaveVisitas(input []entities.Visitas) ([]entities.Visitas, error) {
 						"data": visita,
 					})
 
-					// Marcar como enviado si fue notificado
 					db.DB.Model(&entities.Visitas{}).Where("id = ?", id).Update("enviado", true)
 				}
 			}(uint(item.Id))
@@ -41,7 +39,6 @@ func SaveVisitas(input []entities.Visitas) ([]entities.Visitas, error) {
 }
 
 
-// ✅ Nuevo método GetVisitaByID
 func GetVisitaByID(id uint) (*entities.Visitas, error) {
 	var visita entities.Visitas
 	if err := db.DB.First(&visita, id).Error; err != nil {
