@@ -6,4 +6,5 @@ type Visitas struct {
 	Hora      string `json:"hora"`
 	Fecha     string `json:"fecha"`
 	Enviado   bool   `json:"enviado"`
+	Zona	  string `json:"zona"`
 }

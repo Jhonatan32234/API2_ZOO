@@ -3,7 +3,6 @@ package services
 import (
 	"api2/db"
 	"api2/src/entities"
-	"api2/websocket"
 	"log"
 )
 
@@ -17,16 +16,6 @@ func SaveAtracciones(input []entities.Atraccion) ([]entities.Atraccion, error) {
 		} else {
 			guardadas = append(guardadas, item)
 
-			go func(id uint) {
-				if atraccion, err := GetAtraccionByID(id); err == nil {
-					websocket.NotifyClients(map[string]interface{}{
-						"type": "atraccion",
-						"data": atraccion,
-					})
-
-					db.DB.Model(&entities.Atraccion{}).Where("id = ?", id).Update("enviado", true)
-				}
-			}(uint(item.Id))
 		}
 	}
 
@@ -37,6 +26,7 @@ func SaveAtracciones(input []entities.Atraccion) ([]entities.Atraccion, error) {
 
 	return guardadas, nil
 }
+
 
 
 func GetAtraccionByID(id uint) (*entities.Atraccion, error) {

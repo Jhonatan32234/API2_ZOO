@@ -4,7 +4,6 @@ import (
 	"api2/db"
 	"api2/src/entities"
 	"log"
-	"api2/websocket"
 )
 
 func SaveVisitas(input []entities.Visitas) ([]entities.Visitas, error) {
@@ -17,16 +16,6 @@ func SaveVisitas(input []entities.Visitas) ([]entities.Visitas, error) {
 		} else {
 			guardadas = append(guardadas, item)
 
-			go func(id uint) {
-				if visita, err := GetVisitaByID(id); err == nil {
-					websocket.NotifyClients(map[string]interface{}{
-						"type": "visita",
-						"data": visita,
-					})
-
-					db.DB.Model(&entities.Visitas{}).Where("id = ?", id).Update("enviado", true)
-				}
-			}(uint(item.Id))
 		}
 	}
 
@@ -37,6 +26,7 @@ func SaveVisitas(input []entities.Visitas) ([]entities.Visitas, error) {
 
 	return guardadas, nil
 }
+
 
 
 func GetVisitaByID(id uint) (*entities.Visitas, error) {

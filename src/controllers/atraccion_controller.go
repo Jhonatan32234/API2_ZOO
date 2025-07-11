@@ -16,7 +16,8 @@ import (
 // @Failure 500 {object} map[string]string
 // @Router /api/atraccion/now [get]
 func GetNowAtraccion(c *gin.Context) {
-	data, err := models.GetNowAtraccion()
+	zona := c.GetString("zona")
+	data, err := models.GetNowAtraccion(zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -32,7 +33,8 @@ func GetNowAtraccion(c *gin.Context) {
 // @Failure 500 {object} map[string]string
 // @Router /api/atraccion/lastweek [get]
 func GetLastWeekAtraccion(c *gin.Context) {
-	data, err := models.GetLastWeekAtraccion()
+	zona := c.GetString("zona")
+	data, err := models.GetLastWeekAtraccion(zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -48,7 +50,8 @@ func GetLastWeekAtraccion(c *gin.Context) {
 // @Failure 500 {object} map[string]string
 // @Router /api/atraccion/yesterday [get]
 func GetYesterdayAtraccion(c *gin.Context) {
-	data, err := models.GetYesterdayAtraccion()
+	zona := c.GetString("zona")
+	data, err := models.GetYesterdayAtraccion(zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -65,11 +68,12 @@ func GetYesterdayAtraccion(c *gin.Context) {
 // @Failure 500 {object} map[string]string
 // @Router /api/atraccion/ojiva [get]
 func GetOjivaAtraccion(c *gin.Context) {
+	zona := c.GetString("zona")
 	fecha := c.Query("fecha")
 	if fecha == "" {
 		log.Print("Fecha no proporcionada, se usara la actual")
 	}
-	data, err := models.GetOjivaAtraccion(fecha)
+	data, err := models.GetOjivaAtraccion(fecha, zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -86,8 +90,9 @@ func GetOjivaAtraccion(c *gin.Context) {
 // @Failure 500 {object} map[string]string
 // @Router /api/atraccion/fecha/{fecha} [get]
 func GetFechaAtraccion(c *gin.Context) {
+	zona := c.GetString("zona")
 	fecha := c.Param("fecha")
-	data, err := models.GetFechaAtraccion(fecha)
+	data, err := models.GetFechaAtraccion(fecha, zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

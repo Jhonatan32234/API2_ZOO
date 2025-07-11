@@ -1,4 +1,4 @@
-package auth
+package utils
 
 import (
 	"net/http"
@@ -16,6 +16,7 @@ func JWTQueryMiddleware(roles ...string) gin.HandlerFunc {
 
 		c.Set("user_id", claims.UserID)
 		c.Set("role", claims.Role)
+		c.Set("zona", claims.Zona) 
 
 		c.Next()
 	}

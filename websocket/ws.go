@@ -1,14 +1,17 @@
 package websocket
 
 import (
+	//"api2/services"
+	"api2/src/models/services"
+	"api2/utils"
 	"encoding/json"
-	"github.com/gorilla/websocket"
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"api2/auth"
-	"sync"
 	"log"
+	"net/http"
+	"sync"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
 
 var (
@@ -18,13 +21,13 @@ var (
 )
 
 func HandleConnections(c *gin.Context) {
-	claims, err := auth.ValidateTokenFromQuery(c, "admin", "dev")
+	claims, err := utils.ValidateTokenFromQuery(c, "admin", "user")
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 		return
 	}
 
-	log.Printf("✅ Usuario autenticado: ID=%d, Rol=%s", claims.UserID, claims.Role)
+	log.Printf("✅ Usuario autenticado: ID=%d, Rol=%s, Zona=%s", claims.UserID, claims.Role, claims.Zona)
 
 	upgrader := websocket.Upgrader{
 		CheckOrigin:      func(r *http.Request) bool { return true },
@@ -39,17 +42,14 @@ func HandleConnections(c *gin.Context) {
 		return
 	}
 	defer func() {
-		mutex.Lock()
-		delete(clients, ws)
-		mutex.Unlock()
+		utils.RemoveClient(ws)
 		ws.Close()
 	}()
 
-	mutex.Lock()
-	clients[ws] = c.Query("token")
-	mutex.Unlock()
+	utils.RegisterClient(ws, claims.Zona)
+	go services.StartDynamicConsumerByZona(claims.Zona)
 
-	log.Printf("🟢 Conexión WebSocket establecida.")
+	log.Println("🟢 WebSocket activo.")
 
 	for {
 		_, msg, err := ws.ReadMessage()
@@ -64,15 +64,17 @@ func HandleConnections(c *gin.Context) {
 func NotifyClients(data any) {
 	bytes, err := json.Marshal(data)
 	if err != nil {
+		log.Println("Error al serializar data para broadcast:", err)
 		return
 	}
+	log.Printf("📤 Enviando mensaje al canal broadcast: %s", string(bytes))
 	broadcast <- bytes
 }
-
 
 func StartBroadcaster() {
 	for {
 		msg := <-broadcast
+		log.Printf("📡 Broadcast: enviando mensaje a %d clientes", len(clients))
 		mutex.Lock()
 		for client := range clients {
 			err := client.WriteMessage(websocket.TextMessage, msg)
@@ -85,3 +87,4 @@ func StartBroadcaster() {
 		mutex.Unlock()
 	}
 }
+

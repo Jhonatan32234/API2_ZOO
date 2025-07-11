@@ -1,4 +1,4 @@
-package auth
+package utils
 
 import (
 	"errors"
@@ -13,6 +13,8 @@ var jwtSecret = []byte("clave_secreta_super_segura")
 type CustomClaims struct {
 	UserID uint   `json:"user_id"`
 	Role   string `json:"role"`
+	Zona   string `json:"zona"`
+
 	jwt.RegisteredClaims
 }
 
@@ -58,4 +60,6 @@ func ValidateTokenFromQuery(c *gin.Context, allowedRoles ...string) (*CustomClai
 
 	return nil, errors.New("token inválido")
 }
+
+
 

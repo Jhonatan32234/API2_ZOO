@@ -9,65 +9,102 @@ import (
 )
 
 func StartRabbitConsumers() {
+	//conn, err := amqp.Dial("amqp://admin:password@54.226.109.12:5672/")
 	conn, err := amqp.Dial("amqp://admin:password@localhost:5672/")
+
 	if err != nil {
 		log.Fatal("RabbitMQ connection failed:", err)
 	}
 	ch, _ := conn.Channel()
 
-	go consumeVisitas(ch)
-	go consumeAtracciones(ch)
+	go consumeTopic(ch, "visitas_topic", "visita.data", handleVisitas)
+	go consumeTopic(ch, "atracciones_topic", "atraccion.data", handleAtracciones)
 }
 
-func consumeVisitas(ch *amqp.Channel) {
-	q, _ := ch.QueueDeclare("visitas_queue", true, false, false, false, nil)
-	msgs, _ := ch.Consume(q.Name, "", false, false, false, false, nil)
+func consumeTopic(ch *amqp.Channel, exchange, routingKey string, handler func([]byte)) {
+	err := ch.ExchangeDeclare(
+		exchange,
+		"topic",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Println("❌ Error al declarar el exchange:", err)
+		return
+	}
+
+	q, err := ch.QueueDeclare(
+		routingKey+"_queue", 
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Println("❌ Error al declarar la cola:", err)
+		return
+	}
+
+	err = ch.QueueBind(
+		q.Name,
+		routingKey,
+		exchange,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Println("❌ Error al enlazar la cola al tópico:", err)
+		return
+	}
+
+	msgs, err := ch.Consume(q.Name, "", false, false, false, false, nil)
+	if err != nil {
+		log.Println("❌ Error al iniciar el consumo:", err)
+		return
+	}
 
 	go func() {
 		for d := range msgs {
-			log.Println("📨 Mensaje recibido (visitas):", string(d.Body))
-
-			var visitas []entities.Visitas
-			if err := json.Unmarshal(d.Body, &visitas); err != nil {
-				log.Println("❌ Error al deserializar visitas:", err)
-				continue
-			}
-
-			guardadas, err := SaveVisitas(visitas)
-			if err != nil {
-				log.Println("❌ Error al guardar visitas:", err)
-				continue
-			}
-
-			log.Printf("✅ Visitas guardadas: %d", len(guardadas))
-
+			log.Println("📨 Mensaje recibido:", string(d.Body))
+			handler(d.Body)
 			ch.Ack(d.DeliveryTag, false)
 		}
 	}()
 }
 
-func consumeAtracciones(ch *amqp.Channel) {
-	q, _ := ch.QueueDeclare("atracciones_queue", true, false, false, false, nil)
-	msgs, _ := ch.Consume(q.Name, "", false, false, false, false, nil)
+// Procesador de visitas
+func handleVisitas(data []byte) {
+	var visitas []entities.Visitas
+	if err := json.Unmarshal(data, &visitas); err != nil {
+		log.Println("❌ Error al deserializar visitas:", err)
+		return
+	}
 
-	go func() {
-		for d := range msgs {
-			log.Println("📨 Mensaje recibido (atracciones):", string(d.Body))
+	guardadas, err := SaveVisitas(visitas)
+	if err != nil {
+		log.Println("❌ Error al guardar visitas:", err)
+		return
+	}
 
-			var atracciones []entities.Atraccion
-			if err := json.Unmarshal(d.Body, &atracciones); err != nil {
-				log.Println("❌ Error al deserializar atracciones:", err)
-				continue
-			}
+	log.Printf("✅ Visitas guardadas: %d", len(guardadas))
+}
 
-			guardadas, err := SaveAtracciones(atracciones)
-			if err != nil {
-				log.Println("❌ Error al guardar atracciones:", err)
-				continue
-			}
-			log.Printf("✅ Atracciones guardadas: %d", len(guardadas))
+// Procesador de atracciones
+func handleAtracciones(data []byte) {
+	var atracciones []entities.Atraccion
+	if err := json.Unmarshal(data, &atracciones); err != nil {
+		log.Println("❌ Error al deserializar atracciones:", err)
+		return
+	}
 
-			ch.Ack(d.DeliveryTag, false)
-		}
-	}()
+	guardadas, err := SaveAtracciones(atracciones)
+	if err != nil {
+		log.Println("❌ Error al guardar atracciones:", err)
+		return
+	}
+	log.Printf("✅ Atracciones guardadas: %d", len(guardadas))
 }

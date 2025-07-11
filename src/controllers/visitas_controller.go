@@ -16,7 +16,8 @@ import (
 // @Failure 500 {object} map[string]string
 // @Router /api/visitas/now [get]
 func GetNowVisitas(c *gin.Context) {
-	data, err := models.GetNowVisitas()
+	zona := c.GetString("zona")
+	data, err := models.GetNowVisitas(zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -32,7 +33,8 @@ func GetNowVisitas(c *gin.Context) {
 // @Failure 500 {object} map[string]string
 // @Router /api/visitas/lastweek [get]
 func GetLastWeekVisitas(c *gin.Context) {
-	data, err := models.GetLastWeekVisitas()
+	zona := c.GetString("zona")
+	data, err := models.GetLastWeekVisitas(zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -48,7 +50,8 @@ func GetLastWeekVisitas(c *gin.Context) {
 // @Failure 500 {object} map[string]string
 // @Router /api/visitas/yesterday [get]
 func GetYesterdayVisitas(c *gin.Context) {
-	data, err := models.GetYesterdayVisitas()
+	zona := c.GetString("zona")
+	data, err := models.GetYesterdayVisitas(zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -65,8 +68,9 @@ func GetYesterdayVisitas(c *gin.Context) {
 // @Failure 500 {object} map[string]string
 // @Router /api/visitas/ojiva [get]
 func GetOjivaVisitas(c *gin.Context) {
+	zona := c.GetString("zona")
 	fecha := c.Query("fecha")
-	data, err := models.GetOjivaVisitas(fecha)
+	data, err := models.GetOjivaVisitas(fecha, zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -83,8 +87,9 @@ func GetOjivaVisitas(c *gin.Context) {
 // @Failure 500 {object} map[string]string
 // @Router /api/visitas/fecha/{fecha} [get]
 func GetFechaVisitas(c *gin.Context) {
+	zona := c.GetString("zona")
 	fecha := c.Param("fecha")
-	data, err := models.GetFechaVisitas(fecha)
+	data, err := models.GetFechaVisitas(fecha, zona)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
