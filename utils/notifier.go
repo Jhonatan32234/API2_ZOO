@@ -34,25 +34,9 @@ func NotifyClients(data map[string]interface{}) {
 		return
 	}
 
-	var zona string
-	switch data["type"] {
-	case "visita":
-		if v, ok := data["data"].(map[string]interface{}); ok {
-			z, zOk := v["zona"].(string)
-			if zOk {
-				zona = z
-			}
-		}
-	case "atraccion":
-		if a, ok := data["data"].(map[string]interface{}); ok {
-			z, zOk := a["zona"].(string)
-			if zOk {
-				zona = z
-			}
-		}
-	}
-
-	if zona == "" {
+	// Leer zona directamente del mapa principal
+	zona, ok := data["zona"].(string)
+	if !ok || zona == "" {
 		log.Println("⚠️ Zona no encontrada en los datos. Broadcast cancelado.")
 		return
 	}
@@ -75,6 +59,7 @@ func NotifyClients(data map[string]interface{}) {
 		}
 	}
 }
+
 
 
 func StartBroadcaster() {

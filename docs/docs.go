@@ -580,6 +580,9 @@ const docTemplate = `{
                 },
                 "tiempo": {
                     "type": "integer"
+                },
+                "zona": {
+                    "type": "string"
                 }
             }
         },
@@ -614,6 +617,9 @@ const docTemplate = `{
                 },
                 "visitantes": {
                     "type": "integer"
+                },
+                "zona": {
+                    "type": "string"
                 }
             }
         },

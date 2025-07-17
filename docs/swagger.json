@@ -569,6 +569,9 @@
                 },
                 "tiempo": {
                     "type": "integer"
+                },
+                "zona": {
+                    "type": "string"
                 }
             }
         },
@@ -603,6 +606,9 @@
                 },
                 "visitantes": {
                     "type": "integer"
+                },
+                "zona": {
+                    "type": "string"
                 }
             }
         },

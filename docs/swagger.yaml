@@ -13,6 +13,8 @@ definitions:
         type: string
       tiempo:
         type: integer
+      zona:
+        type: string
     type: object
   entities.VisitaGeneral:
     properties:
@@ -35,6 +37,8 @@ definitions:
         type: integer
       visitantes:
         type: integer
+      zona:
+        type: string
     type: object
   models.OjivaResultAtraccion:
     properties:

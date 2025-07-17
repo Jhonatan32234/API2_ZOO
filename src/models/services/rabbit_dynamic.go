@@ -1,8 +1,6 @@
 package services
 
 import (
-	"api2/db"
-	"api2/src/entities"
 	"api2/utils"
 	"encoding/json"
 	"fmt"
@@ -31,13 +29,22 @@ func StartDynamicConsumerByZona(zona string) {
 	zonaConsumers[zona] = true
 	log.Printf("🚀 Iniciando consumidores para la zona: %s", zona)
 
-	go consumeZonaTopic("visitas_topic", fmt.Sprintf("visitas.%s", zona), handleZonaVisita)
-	go consumeZonaTopic("atracciones_topic", fmt.Sprintf("atracciones.%s", zona), handleZonaAtraccion)
+	go consumeZonaTopic("visitas_topic", fmt.Sprintf("visitas.%s", zona),
+	func(id uint) {
+		handleZonaVisita(id, zona)
+	})
+
+go consumeZonaTopic("atracciones_topic", fmt.Sprintf("atracciones.%s", zona),
+	func(id uint) {
+		handleZonaAtraccion(id, zona)
+	})
+
 }
 
 
 func consumeZonaTopic(exchange, routingKey string, handler func(uint)) {
 	log.Printf("📡 Iniciando consumidor para zona: exchange='%s', routingKey='%s'\n", exchange, routingKey)
+	//conn, err := amqp.Dial("amqp://admin:password@54.226.109.12:5672/")
 
 	conn, err := amqp.Dial("amqp://admin:password@localhost:5672/")
 	if err != nil {
@@ -94,67 +101,24 @@ func consumeZonaTopic(exchange, routingKey string, handler func(uint)) {
 	}()
 }
 
-
-func handleZonaVisita(id uint) {
-	log.Printf("📌 Procesando visita por zona con ID: %d\n", id)
-
-	var v entities.Visitas
-	result := db.DB.Where("id = ? AND enviado = ? AND CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) BETWEEN 9 AND 16", id, false).First(&v)
-	if result.Error != nil {
-		log.Printf("❌ No se encontró la visita válida con ID %d: %v\n", id, result.Error)
-		return
-	}
-
-	log.Printf("📄 Visita encontrada: %+v\n", v)
-
-	log.Println("📤 Enviando visita al WebSocket...")
-	var visitaMap map[string]interface{}
-	jsonBytes, _ := json.Marshal(v)
-	json.Unmarshal(jsonBytes, &visitaMap)
+func handleZonaVisita(id uint, zona string) {
+	log.Printf("📌 Procesando visita por zona con ID: %d (zona: %s)\n", id, zona)
 
 	utils.NotifyClients(map[string]interface{}{
 		"type": "visita",
-		"data": visitaMap,
+		"zona": zona,
 	})
 	log.Println("✅ Enviado al WebSocket.")
-
-	// ✅ Marcar como enviada en la base de datos
-	if err := db.DB.Model(&entities.Visitas{}).Where("id = ?", v.Id).Update("enviado", true).Error; err != nil {
-		log.Printf("❌ Error al actualizar campo 'enviado' para visita ID %d: %v\n", v.Id, err)
-	} else {
-		log.Printf("🟢 Visita ID %d actualizada como enviada.\n", v.Id)
-	}
 }
 
-
-func handleZonaAtraccion(id uint) {
-	log.Printf("📌 Procesando atracción por zona con ID: %d\n", id)
-
-	var a entities.Atraccion
-	result := db.DB.Where("id = ? AND enviado = ? AND CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) BETWEEN 9 AND 16", id, false).First(&a)
-	if result.Error != nil {
-		log.Printf("❌ No se encontró la atracción válida con ID %d: %v\n", id, result.Error)
-		return
-	}
-
-	log.Printf("📄 Atracción encontrada: %+v\n", a)
-
-	log.Println("📤 Enviando atracción al WebSocket...")
-	var atraccionMap map[string]interface{}
-	jsonBytes, _ := json.Marshal(a)
-	json.Unmarshal(jsonBytes, &atraccionMap)
+func handleZonaAtraccion(id uint, zona string) {
+	log.Printf("📌 Procesando atracción por zona con ID: %d (zona: %s)\n", id, zona)
 
 	utils.NotifyClients(map[string]interface{}{
 		"type": "atraccion",
-		"data": atraccionMap,
+		"zona": zona,
 	})
 	log.Println("✅ Enviado al WebSocket.")
-
-	// ✅ Marcar como enviada en la base de datos
-	if err := db.DB.Model(&entities.Atraccion{}).Where("id = ?", a.Id).Update("enviado", true).Error; err != nil {
-		log.Printf("❌ Error al actualizar campo 'enviado' para atracción ID %d: %v\n", a.Id, err)
-	} else {
-		log.Printf("🟢 Atracción ID %d actualizada como enviada.\n", a.Id)
-	}
 }
+
 

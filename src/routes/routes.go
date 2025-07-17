@@ -15,14 +15,12 @@ func SetupRoutes(r *gin.Engine) {
 	api.GET("/visitas/lastweek", utils.JWTQueryMiddleware("admin", "user"), controllers.GetLastWeekVisitas)
 	api.GET("/visitas/yesterday", utils.JWTQueryMiddleware("admin", "user"), controllers.GetYesterdayVisitas)
 	api.GET("/visitas/ojiva", utils.JWTQueryMiddleware("admin", "user"), controllers.GetOjivaVisitas)
-	api.GET("/visitas/fecha/:fecha", utils.JWTQueryMiddleware("admin", "user"), controllers.GetFechaVisitas)
 
 	// Atracciones
 	api.GET("/atraccion/now", utils.JWTQueryMiddleware("admin", "user"), controllers.GetNowAtraccion)
 	api.GET("/atraccion/lastweek", utils.JWTQueryMiddleware("admin", "user"), controllers.GetLastWeekAtraccion)
 	api.GET("/atraccion/yesterday", utils.JWTQueryMiddleware("admin", "user"), controllers.GetYesterdayAtraccion)
 	api.GET("/atraccion/ojiva", utils.JWTQueryMiddleware("admin", "user"), controllers.GetOjivaAtraccion)
-	api.GET("/atraccion/fecha/:fecha", utils.JWTQueryMiddleware("admin", "user"), controllers.GetFechaAtraccion)
 
 	// Visitas General
 	api.GET("/visitasGeneral", utils.JWTQueryMiddleware("admin"), controllers.GetAllVisitasGeneral)

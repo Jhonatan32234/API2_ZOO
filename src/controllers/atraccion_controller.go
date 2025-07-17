@@ -81,21 +81,3 @@ func GetOjivaAtraccion(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
-// GetFechaAtraccion godoc
-// @Summary Obtener atracciones por fecha exacta
-// @Tags atraccion
-// @Produce json
-// @Param fecha path string true "Fecha en formato YYYY-MM-DD"
-// @Success 200 {array} entities.Atraccion
-// @Failure 500 {object} map[string]string
-// @Router /api/atraccion/fecha/{fecha} [get]
-func GetFechaAtraccion(c *gin.Context) {
-	zona := c.GetString("zona")
-	fecha := c.Param("fecha")
-	data, err := models.GetFechaAtraccion(fecha, zona)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, data)
-}
