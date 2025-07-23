@@ -77,22 +77,3 @@ func GetOjivaVisitas(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, data)
 }
-
-// GetFechaVisitas godoc
-// @Summary Obtener visitas por fecha exacta
-// @Tags visitas
-// @Produce json
-// @Param fecha path string true "Fecha en formato YYYY-MM-DD"
-// @Success 200 {array} entities.Visitas
-// @Failure 500 {object} map[string]string
-// @Router /api/visitas/fecha/{fecha} [get]
-func GetFechaVisitas(c *gin.Context) {
-	zona := c.GetString("zona")
-	fecha := c.Param("fecha")
-	data, err := models.GetFechaVisitas(fecha, zona)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, data)
-}

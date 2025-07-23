@@ -4,7 +4,7 @@ import (
 	"api2/src/entities"
 	"api2/src/models"
 	"net/http"
-	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,10 +20,14 @@ import (
 // @Router /api/visitasGeneral [post]
 func CreateVisitaGeneral(c *gin.Context) {
 	var visita entities.VisitaGeneral
+
 	if err := c.ShouldBindJSON(&visita); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	// Asignar fecha actual (solo la parte de la fecha, sin hora)
+	visita.Fecha = time.Now().Format("2006-01-02")
 
 	if err := models.CreateVisitaGeneral(visita); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -49,17 +53,18 @@ func GetAllVisitasGeneral(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
-// GetVisitaGeneralByID godoc
-// @Summary Obtener una visita por ID
+// GetVisitaGeneralByFecha godoc
+// @Summary Obtener una visita por fecha
 // @Tags visitasGeneral
 // @Produce json
-// @Param id path int true "ID de la visita"
+// @Param fecha path string true "Fecha de la visita en formato YYYY-MM-DD"
 // @Success 200 {object} entities.VisitaGeneral
 // @Failure 404 {object} map[string]string
-// @Router /api/visitasGeneral/{id} [get]
-func GetVisitaGeneralByID(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	visita, err := models.GetVisitaGeneralByID(id)
+// @Router /api/visitasGeneral/{fecha} [get]
+func GetVisitaGeneralByFecha(c *gin.Context) {
+	fecha := c.Param("fecha")
+	var visita entities.VisitaGeneral
+	err := models.GetVisitaGeneralByFecha(fecha, &visita)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Visita no encontrada"})
 		return
@@ -67,25 +72,26 @@ func GetVisitaGeneralByID(c *gin.Context) {
 	c.JSON(http.StatusOK, visita)
 }
 
+
 // UpdateVisitaGeneral godoc
-// @Summary Actualizar una visita por ID
+// @Summary Actualizar una visita por fecha
 // @Tags visitasGeneral
 // @Accept json
 // @Produce json
-// @Param id path int true "ID de la visita"
+// @Param fecha path string true "Fecha de la visita en formato YYYY-MM-DD"
 // @Param visita body entities.VisitaGeneral true "Nuevos datos de la visita"
 // @Success 200 {object} map[string]string
 // @Failure 400 {object} map[string]string
-// @Router /api/visitasGeneral/{id} [put]
+// @Router /api/visitasGeneral/{fecha} [put]
 func UpdateVisitaGeneral(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
+	fecha := c.Param("fecha") // fecha en formato "2025-07-23"
 	var updated entities.VisitaGeneral
 	if err := c.ShouldBindJSON(&updated); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := models.UpdateVisitaGeneral(id, updated); err != nil {
+	if err := models.UpdateVisitaGeneralPorFecha(fecha, updated); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -93,19 +99,21 @@ func UpdateVisitaGeneral(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Visita actualizada"})
 }
 
-// DeleteVisitaGeneral godoc
-// @Summary Eliminar una visita por ID
+
+// DeleteVisitaGeneralPorFecha godoc
+// @Summary Eliminar una visita por fecha
 // @Tags visitasGeneral
 // @Produce json
-// @Param id path int true "ID de la visita"
+// @Param fecha path string true "Fecha de la visita en formato YYYY-MM-DD"
 // @Success 200 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /api/visitasGeneral/{id} [delete]
-func DeleteVisitaGeneral(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	if err := models.DeleteVisitaGeneral(id); err != nil {
+// @Router /api/visitasGeneral/{fecha} [delete]
+func DeleteVisitaGeneralPorFecha(c *gin.Context) {
+	fecha := c.Param("fecha")
+	if err := models.DeleteVisitaGeneralPorFecha(fecha); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Visita eliminada"})
 }
+

@@ -133,12 +133,21 @@ func GetOjivaAtraccion(fecha, zona string) ([]OjivaAtraccion, error) {
 	}
 
 	err := db.DB.Raw(`
-		SELECT fecha, hora, SUM(tiempo) as total
-		FROM atraccion
-		WHERE fecha = ? AND zona = ? AND CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) BETWEEN 9 AND 16
-		GROUP BY fecha, hora
-		ORDER BY hora
-	`, fecha, zona).Scan(&result).Error
+	SELECT
+		fecha,
+		DATE_FORMAT(STR_TO_DATE(hora, '%H:%i'), '%H:00') AS hora,
+		SUM(tiempo) AS total
+	FROM atraccion
+	WHERE
+		fecha = ? AND
+		zona = ? AND
+		HOUR(STR_TO_DATE(hora, '%H:%i')) BETWEEN 9 AND 16
+	GROUP BY
+		fecha, DATE_FORMAT(STR_TO_DATE(hora, '%H:%i'), '%H:00')
+	ORDER BY hora
+`, fecha, zona).Scan(&result).Error
+
+
 
 	return result, err
 }

@@ -140,19 +140,3 @@ func GetOjivaVisitas(fecha, zona string) ([]OjivaVisitas, error) {
 
 	return result, err
 }
-
-// Suma por hora para fecha exacta (no acumulado)
-func GetFechaVisitas(fecha, zona string) ([]OjivaVisitas, error) {
-	var result []OjivaVisitas
-	err := db.DB.Raw(`
-		SELECT 
-			fecha,
-			CONCAT(LPAD(CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED), 2, '0'), ':00') AS hora,
-			SUM(visitantes) as total
-		FROM visitas
-		WHERE fecha = ? AND zona = ? AND CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) BETWEEN 9 AND 16
-		GROUP BY fecha, hora
-		ORDER BY hora
-	`, fecha, zona).Scan(&result).Error
-	return result, err
-}

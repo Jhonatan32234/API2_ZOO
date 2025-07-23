@@ -9,8 +9,8 @@ import (
 )
 
 func StartRabbitConsumers() {
-	//conn, err := amqp.Dial("amqp://admin:password@54.226.109.12:5672/")
-	conn, err := amqp.Dial("amqp://admin:password@localhost:5672/")
+	conn, err := amqp.Dial("amqp://admin:password@54.226.109.12:5672/")
+	//conn, err := amqp.Dial("amqp://admin:password@localhost:5672/")
 
 	if err != nil {
 		log.Fatal("RabbitMQ connection failed:", err)
