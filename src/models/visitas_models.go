@@ -34,31 +34,31 @@ func GetNowVisitas(zona string) ([]NowVisitas, error) {
 	var result []NowVisitas
 	err := db.DB.Raw(`
 		WITH por_hora AS (
-			SELECT 
-				fecha,
-				CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) AS hora,
-				SUM(visitantes) AS total
-			FROM visitas
-			WHERE fecha = (
-				SELECT MAX(fecha) FROM visitas WHERE zona = ?
-			)
-			AND zona = ?
-			AND CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) BETWEEN 9 AND 16
-			GROUP BY fecha, hora
-		),
-		acumulado AS (
-			SELECT 
-				fecha,
-				hora,
-				SUM(total) OVER (ORDER BY hora) AS total
-			FROM por_hora
-		)
 		SELECT 
 			fecha,
-			CONCAT(LPAD(hora, 2, '0'), ':00') AS hora,
-			total
-		FROM acumulado
-		ORDER BY hora
+			CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) AS hora_truncada,
+			SUM(visitantes) AS total
+		FROM visitas
+		WHERE fecha = (
+			SELECT MAX(fecha) FROM visitas WHERE zona = ?
+		)
+		AND zona = ?
+		AND CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) BETWEEN 9 AND 16
+		GROUP BY fecha, hora_truncada
+	),
+	acumulado AS (
+		SELECT 
+			fecha,
+			hora_truncada,
+			SUM(total) OVER (ORDER BY hora_truncada) AS total
+		FROM por_hora
+	)
+	SELECT 
+		fecha,
+		CONCAT(LPAD(hora_truncada, 2, '0'), ':00') AS hora,
+		total
+	FROM acumulado
+	ORDER BY hora_truncada
 	`, zona, zona).Scan(&result).Error
 	return result, err
 }
