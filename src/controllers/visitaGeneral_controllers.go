@@ -17,7 +17,7 @@ import (
 // @Param visita body entities.VisitaGeneral true "Datos de la visita"
 // @Success 201 {object} map[string]string
 // @Failure 400 {object} map[string]string
-// @Router /api/visitasGeneral [post]
+// @Router /api/visitasgeneral [post]
 func CreateVisitaGeneral(c *gin.Context) {
 	var visita entities.VisitaGeneral
 
@@ -43,7 +43,7 @@ func CreateVisitaGeneral(c *gin.Context) {
 // @Produce json
 // @Success 200 {array} entities.VisitaGeneral
 // @Failure 500 {object} map[string]string
-// @Router /api/visitasGeneral [get]
+// @Router /api/visitasgeneral [get]
 func GetAllVisitasGeneral(c *gin.Context) {
 	data, err := models.GetAllVisitasGeneral()
 	if err != nil {
@@ -60,7 +60,7 @@ func GetAllVisitasGeneral(c *gin.Context) {
 // @Param fecha path string true "Fecha de la visita en formato YYYY-MM-DD"
 // @Success 200 {object} entities.VisitaGeneral
 // @Failure 404 {object} map[string]string
-// @Router /api/visitasGeneral/{fecha} [get]
+// @Router /api/visitasgeneral/{fecha} [get]
 func GetVisitaGeneralByFecha(c *gin.Context) {
 	fecha := c.Param("fecha")
 	var visita entities.VisitaGeneral
@@ -82,7 +82,7 @@ func GetVisitaGeneralByFecha(c *gin.Context) {
 // @Param visita body entities.VisitaGeneral true "Nuevos datos de la visita"
 // @Success 200 {object} map[string]string
 // @Failure 400 {object} map[string]string
-// @Router /api/visitasGeneral/{fecha} [put]
+// @Router /api/visitasgeneral/{fecha} [put]
 func UpdateVisitaGeneral(c *gin.Context) {
 	fecha := c.Param("fecha") // fecha en formato "2025-07-23"
 	var updated entities.VisitaGeneral
@@ -107,7 +107,7 @@ func UpdateVisitaGeneral(c *gin.Context) {
 // @Param fecha path string true "Fecha de la visita en formato YYYY-MM-DD"
 // @Success 200 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /api/visitasGeneral/{fecha} [delete]
+// @Router /api/visitasgeneral/{fecha} [delete]
 func DeleteVisitaGeneralPorFecha(c *gin.Context) {
 	fecha := c.Param("fecha")
 	if err := models.DeleteVisitaGeneralPorFecha(fecha); err != nil {

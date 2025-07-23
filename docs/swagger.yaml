@@ -40,49 +40,9 @@ definitions:
       zona:
         type: string
     type: object
-  models.OjivaResultAtraccion:
-    properties:
-      hora:
-        type: string
-      total:
-        type: integer
-    type: object
-  models.OjivaResultVisitas:
-    properties:
-      hora:
-        type: string
-      total:
-        type: integer
-    type: object
 info:
   contact: {}
 paths:
-  /api/atraccion/fecha/{fecha}:
-    get:
-      parameters:
-      - description: Fecha en formato YYYY-MM-DD
-        in: path
-        name: fecha
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entities.Atraccion'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Obtener atracciones por fecha exacta
-      tags:
-      - atraccion
   /api/atraccion/lastweek:
     get:
       produces:
@@ -133,12 +93,6 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.OjivaResultAtraccion'
-            type: array
         "500":
           description: Internal Server Error
           schema:
@@ -168,32 +122,6 @@ paths:
       summary: Obtener atracciones de la penúltima fecha registrada
       tags:
       - atraccion
-  /api/visitas/fecha/{fecha}:
-    get:
-      parameters:
-      - description: Fecha en formato YYYY-MM-DD
-        in: path
-        name: fecha
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entities.Visitas'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Obtener visitas por fecha exacta
-      tags:
-      - visitas
   /api/visitas/lastweek:
     get:
       produces:
@@ -244,12 +172,6 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.OjivaResultVisitas'
-            type: array
         "500":
           description: Internal Server Error
           schema:
@@ -279,7 +201,7 @@ paths:
       summary: Obtener visitas de la penúltima fecha registrada
       tags:
       - visitas
-  /api/visitasGeneral:
+  /api/visitasgeneral:
     get:
       produces:
       - application/json
@@ -327,14 +249,14 @@ paths:
       summary: Crear una nueva visita
       tags:
       - visitasGeneral
-  /api/visitasGeneral/{id}:
+  /api/visitasgeneral/{fecha}:
     delete:
       parameters:
-      - description: ID de la visita
+      - description: Fecha de la visita en formato YYYY-MM-DD
         in: path
-        name: id
+        name: fecha
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -350,16 +272,16 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Eliminar una visita por ID
+      summary: Eliminar una visita por fecha
       tags:
       - visitasGeneral
     get:
       parameters:
-      - description: ID de la visita
+      - description: Fecha de la visita en formato YYYY-MM-DD
         in: path
-        name: id
+        name: fecha
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -373,18 +295,18 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Obtener una visita por ID
+      summary: Obtener una visita por fecha
       tags:
       - visitasGeneral
     put:
       consumes:
       - application/json
       parameters:
-      - description: ID de la visita
+      - description: Fecha de la visita en formato YYYY-MM-DD
         in: path
-        name: id
+        name: fecha
         required: true
-        type: integer
+        type: string
       - description: Nuevos datos de la visita
         in: body
         name: visita
@@ -406,7 +328,7 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Actualizar una visita por ID
+      summary: Actualizar una visita por fecha
       tags:
       - visitasGeneral
 swagger: "2.0"

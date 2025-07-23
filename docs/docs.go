@@ -15,46 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/atraccion/fecha/{fecha}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "atraccion"
-                ],
-                "summary": "Obtener atracciones por fecha exacta",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Fecha en formato YYYY-MM-DD",
-                        "name": "fecha",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/entities.Atraccion"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/atraccion/lastweek": {
             "get": {
                 "produces": [
@@ -135,15 +95,6 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.OjivaResultAtraccion"
-                            }
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -172,46 +123,6 @@ const docTemplate = `{
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/entities.Atraccion"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/visitas/fecha/{fecha}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "visitas"
-                ],
-                "summary": "Obtener visitas por fecha exacta",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Fecha en formato YYYY-MM-DD",
-                        "name": "fecha",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/entities.Visitas"
                             }
                         }
                     },
@@ -307,15 +218,6 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.OjivaResultVisitas"
-                            }
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -359,7 +261,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/visitasGeneral": {
+        "/api/visitasgeneral": {
             "get": {
                 "produces": [
                     "application/json"
@@ -433,7 +335,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/visitasGeneral/{id}": {
+        "/api/visitasgeneral/{fecha}": {
             "get": {
                 "produces": [
                     "application/json"
@@ -441,12 +343,12 @@ const docTemplate = `{
                 "tags": [
                     "visitasGeneral"
                 ],
-                "summary": "Obtener una visita por ID",
+                "summary": "Obtener una visita por fecha",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "ID de la visita",
-                        "name": "id",
+                        "type": "string",
+                        "description": "Fecha de la visita en formato YYYY-MM-DD",
+                        "name": "fecha",
                         "in": "path",
                         "required": true
                     }
@@ -479,12 +381,12 @@ const docTemplate = `{
                 "tags": [
                     "visitasGeneral"
                 ],
-                "summary": "Actualizar una visita por ID",
+                "summary": "Actualizar una visita por fecha",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "ID de la visita",
-                        "name": "id",
+                        "type": "string",
+                        "description": "Fecha de la visita en formato YYYY-MM-DD",
+                        "name": "fecha",
                         "in": "path",
                         "required": true
                     },
@@ -526,12 +428,12 @@ const docTemplate = `{
                 "tags": [
                     "visitasGeneral"
                 ],
-                "summary": "Eliminar una visita por ID",
+                "summary": "Eliminar una visita por fecha",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "ID de la visita",
-                        "name": "id",
+                        "type": "string",
+                        "description": "Fecha de la visita en formato YYYY-MM-DD",
+                        "name": "fecha",
                         "in": "path",
                         "required": true
                     }
@@ -620,28 +522,6 @@ const docTemplate = `{
                 },
                 "zona": {
                     "type": "string"
-                }
-            }
-        },
-        "models.OjivaResultAtraccion": {
-            "type": "object",
-            "properties": {
-                "hora": {
-                    "type": "string"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "models.OjivaResultVisitas": {
-            "type": "object",
-            "properties": {
-                "hora": {
-                    "type": "string"
-                },
-                "total": {
-                    "type": "integer"
                 }
             }
         }

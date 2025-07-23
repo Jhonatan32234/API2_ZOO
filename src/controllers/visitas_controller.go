@@ -64,7 +64,6 @@ func GetYesterdayVisitas(c *gin.Context) {
 // @Tags visitas
 // @Produce json
 // @Param fecha query string false "Fecha en formato YYYY-MM-DD"
-// @Success 200 {array} models.OjivaResultVisitas
 // @Failure 500 {object} map[string]string
 // @Router /api/visitas/ojiva [get]
 func GetOjivaVisitas(c *gin.Context) {
