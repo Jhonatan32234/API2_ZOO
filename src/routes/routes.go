@@ -23,10 +23,10 @@ func SetupRoutes(r *gin.Engine) {
 	api.GET("/atraccion/ojiva", utils.JWTQueryMiddleware("admin", "user"), controllers.GetOjivaAtraccion)
 
 	// Visitas General
-	api.GET("/visitasgeneral", utils.JWTQueryMiddleware("admin"), controllers.GetAllVisitasGeneral)
+	api.GET("/visitasgeneral", utils.JWTQueryMiddleware("admin","user"), controllers.GetAllVisitasGeneral)
 	api.GET("/visitasgeneral/:fecha", utils.JWTQueryMiddleware("admin","user"), controllers.GetVisitaGeneralByFecha)
-	api.POST("/visitasgeneral", utils.JWTQueryMiddleware("admin"), controllers.CreateVisitaGeneral)
-	api.PUT("/visitasgeneral/:fecha", utils.JWTQueryMiddleware("admin"), controllers.UpdateVisitaGeneral)
+	api.POST("/visitasgeneral", utils.JWTQueryMiddleware("admin","user"), controllers.CreateVisitaGeneral)
+	api.PUT("/visitasgeneral/:fecha", utils.JWTQueryMiddleware("admin","user"), controllers.UpdateVisitaGeneral)
 	api.DELETE("/visitasgeneral/:fecha", utils.JWTQueryMiddleware("admin"), controllers.DeleteVisitaGeneralPorFecha)
 }
 
