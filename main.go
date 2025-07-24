@@ -31,6 +31,6 @@ func main() {
 
 	routes.SetupRoutes(r)
 
-	log.Println("Servidor iniciado en :8081")
-	r.Run(":8081")
+	log.Println("Servidor iniciado en :8080")
+	r.Run(":8080")
 }
