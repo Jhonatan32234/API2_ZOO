@@ -38,7 +38,7 @@ func GetNowAtraccion(zona string) ([]NowAtraccion, error) {
 			SELECT 
 				fecha,
 				nombre,
-				CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) AS hora,
+				CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) AS hora_truncada,
 				SUM(tiempo) AS total
 			FROM atraccion
 			WHERE fecha = (
@@ -46,26 +46,27 @@ func GetNowAtraccion(zona string) ([]NowAtraccion, error) {
 			)
 			AND zona = ?
 			AND CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED) BETWEEN 9 AND 16
-			GROUP BY fecha, nombre, hora
+			GROUP BY fecha, nombre, CAST(SUBSTRING(hora, 1, 2) AS UNSIGNED)
 		),
 		acumulado AS (
 			SELECT 
 				fecha,
 				nombre,
-				hora,
-				SUM(total) OVER (PARTITION BY nombre ORDER BY hora) AS total
+				hora_truncada,
+				SUM(total) OVER (PARTITION BY nombre ORDER BY hora_truncada) AS total
 			FROM datos
 		)
 		SELECT 
 			fecha,
 			nombre,
-			CONCAT(LPAD(hora, 2, '0'), ':00') AS hora,
+			CONCAT(LPAD(hora_truncada, 2, '0'), ':00') AS hora,
 			total
 		FROM acumulado
-		ORDER BY nombre, hora
+		ORDER BY nombre, hora_truncada
 	`, zona, zona).Scan(&result).Error
 	return result, err
 }
+
 
 func GetLastWeekAtraccion(zona string) ([]LastWeekAtraccion, error) {
 	var fechas []string
