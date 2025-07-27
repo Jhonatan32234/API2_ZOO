@@ -4,13 +4,14 @@ import (
 	"api2/src/entities"
 	"encoding/json"
 	"log"
+	"os"
 
 	"github.com/streadway/amqp"
 )
 
 func StartRabbitConsumers() {
-	conn, err := amqp.Dial("amqp://admin:password@54.226.109.12:5672/")
-	//conn, err := amqp.Dial("amqp://admin:password@localhost:5672/")
+	url := os.Getenv("RABBITCONN")
+	conn, err := amqp.Dial(url)
 
 	if err != nil {
 		log.Fatal("RabbitMQ connection failed:", err)

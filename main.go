@@ -9,13 +9,17 @@ import (
 	"api2/utils"
 	"api2/websocket"
 	"log"
-
+	"github.com/joho/godotenv"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
+	err := godotenv.Load(".env")
+    if err != nil {
+        log.Println("Advertencia: no se pudo cargar el archivo .env:", err)
+    }
 	db.Connect()
 
 	services.StartRabbitConsumers()

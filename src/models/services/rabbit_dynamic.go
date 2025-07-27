@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"sync"
 	"time"
 
@@ -43,10 +44,10 @@ go consumeZonaTopic("atracciones_topic", fmt.Sprintf("atracciones.%s", zona),
 
 
 func consumeZonaTopic(exchange, routingKey string, handler func(uint)) {
+	url := os.Getenv("RABBITCONN")
 	log.Printf("📡 Iniciando consumidor para zona: exchange='%s', routingKey='%s'\n", exchange, routingKey)
-	conn, err := amqp.Dial("amqp://admin:password@54.226.109.12:5672/")
+	conn, err := amqp.Dial(url)
 
-	//conn, err := amqp.Dial("amqp://admin:password@localhost:5672/")
 	if err != nil {
 		log.Println("❌ RabbitMQ conexión fallida:", err)
 		return
